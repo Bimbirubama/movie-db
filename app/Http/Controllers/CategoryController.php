@@ -12,7 +12,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = \App\Models\Category::all();
+        return response()->json($categories);
     }
 
     /**
@@ -20,7 +21,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return response()->json(['message' => 'Display form for creating category']);
     }
 
     /**
@@ -28,7 +29,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $category = \App\Models\Category::create($request->all());
+        return response()->json($category, 201);
     }
 
     /**
@@ -36,7 +38,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return response()->json($category);
     }
 
     /**
@@ -44,7 +46,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return response()->json(['message' => 'Display form for editing category', 'category' => $category]);
     }
 
     /**
@@ -52,7 +54,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $category->update($request->all());
+        return response()->json($category);
     }
 
     /**
@@ -60,6 +63,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return response()->json(null, 204);
     }
 }
