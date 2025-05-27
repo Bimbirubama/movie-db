@@ -12,8 +12,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = \App\Models\Category::all();
-        return response()->json($categories);
+        $categories = Category::all();
+return view('category.index', compact('categories'));
     }
 
     /**
@@ -21,7 +21,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return response()->json(['message' => 'Display form for creating category']);
+return view('category.create');
     }
 
     /**
@@ -29,8 +29,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $category = \App\Models\Category::create($request->all());
-        return response()->json($category, 201);
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+        ]);
+
+        Category::create($validated);
+
+return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
 
     /**
@@ -38,7 +43,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return response()->json($category);
+return view('category.show', compact('category'));
     }
 
     /**
@@ -46,7 +51,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return response()->json(['message' => 'Display form for editing category', 'category' => $category]);
+return view('category.edit', compact('category'));
     }
 
     /**
@@ -54,8 +59,13 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $category->update($request->all());
-        return response()->json($category);
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+        ]);
+
+        $category->update($validated);
+
+return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
 
     /**
@@ -64,6 +74,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return response()->json(null, 204);
+
+return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
 }

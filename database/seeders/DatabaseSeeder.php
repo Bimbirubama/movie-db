@@ -14,14 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(CategorySeeder::class);
         //User::factory(10)->create();
         
-        Movie::factory()->create();
-    //     User::factory()->create([
-    //         'name' => 'Test User',
-    //         'email' => 'test@example.com',
-    //     ]);
-    // }
+        //     User::factory()->create([
+            //         'name' => 'Test User',
+            //         'email' => 'test@example.com',
+            //     ]);
+            // }
+            $this->call(CategorySeeder::class);
+            Movie::factory(50)->create();
+
+
     }
 }

@@ -2,46 +2,84 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+
 
 class MovieController extends Controller
 {
-    public function index()
+    public function homepage()
     {
-        $movies = \App\Models\Movie::all();
-        return response()->json($movies);
+        $movies = Movie::latest()->paginate(6);
+        return view('homepage',compact('movies'));
     }
 
-    public function create()
+   public function detailmovie($id, $slug)
+   {
+        $movie = Movie::find($id);
+        return view('movies.detailmovie', compact('movie'));
+    }
+    public function store(Request $request)
     {
-        return response()->json(['message' => 'Display form for creating movie']);
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'synopsis' => 'nullable|string',
+            'category_id' => 'required|exists:categories,id',
+            'year' => 'required|integer|min:1900|max:' . date('Y'),
+            'actors' => 'nullable|string',
+            'cover_image' => 'nullable|image|max:2048',
+        ]);
+
+        $validated['slug'] = Str::slug($validated['title']);
+
+        if ($request->hasFile('cover_image')) {
+            $validated['cover_image'] = $request->file('cover_image')->store('covers', 'public');
+        }
+
+        Movie::create($validated);
+
+        return redirect()->route('movies.index')->with('success', 'Movie created successfully.');
     }
 
-    public function store(\Illuminate\Http\Request $request)
+    public function show(Movie $movie)
     {
-        $movie = \App\Models\Movie::create($request->all());
-        return response()->json($movie, 201);
+        return view('movies.show', compact('movie'));
     }
 
-    public function show(\App\Models\Movie $movie)
+    public function edit(Movie $movie)
     {
-        return response()->json($movie);
+        $categories = Category::all();
+        return view('movies.edit', compact('movie', 'categories'));
     }
 
-    public function edit(\App\Models\Movie $movie)
+    public function update(Request $request, Movie $movie)
     {
-        return response()->json(['message' => 'Display form for editing movie', 'movie' => $movie]);
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'synopsis' => 'nullable|string',
+            'category_id' => 'required|exists:categories,id',
+            'year' => 'required|integer|min:1900|max:' . date('Y'),
+            'actors' => 'nullable|string',
+            'cover_image' => 'nullable|image|max:2048',
+        ]);
+
+        $validated['slug'] = Str::slug($validated['title']);
+
+        if ($request->hasFile('cover_image')) {
+            $validated['cover_image'] = $request->file('cover_image')->store('covers', 'public');
+        }
+
+        $movie->update($validated);
+
+        return redirect()->route('movies.index')->with('success', 'Movie updated successfully.');
     }
 
-    public function update(\Illuminate\Http\Request $request, \App\Models\Movie $movie)
-    {
-        $movie->update($request->all());
-        return response()->json($movie);
-    }
-
-    public function destroy(\App\Models\Movie $movie)
+    public function destroy(Movie $movie)
     {
         $movie->delete();
-        return response()->json(null, 204);
+        return redirect()->route('movies.index')->with('success', 'Movie deleted successfully.');
     }
 }
