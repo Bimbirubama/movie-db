@@ -32,7 +32,7 @@
             <tbody>
                 @foreach ($movies as $index => $movie)
                     <tr>
-                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $movies->firstItem() + $index }}</td>
                         <td>{{ $movie->title }}</td>
                         <td>{{ $movie->category->name ?? 'N/A' }}</td>
                         <td>{{ $movie->year }}</td>

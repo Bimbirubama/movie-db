@@ -30,12 +30,13 @@ return view('category.create');
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
+            'category_name' => 'required|string|max:128',
+            'description' => 'required|string',
         ]);
 
         Category::create($validated);
 
-return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
 
     /**
