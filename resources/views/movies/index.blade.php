@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.template')
 
 @section('navMovie', 'active')
 
@@ -50,7 +50,9 @@
                             <form action="{{ route('movies.destroy', $movie->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure to delete this movie?');">
                                 @csrf
                                 @method('DELETE')
+                                @can('delete')
                                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            @endcan
                             </form>
                         </td>
                     </tr>

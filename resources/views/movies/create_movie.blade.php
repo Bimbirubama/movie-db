@@ -8,7 +8,7 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <div class="col-12">
             <h1 class="h2">Input Data Movie</h1>
-            <form action="/movie" method="POST" enctype="multipart/form-data">
+            <form action="/movies" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="row mb-3">
